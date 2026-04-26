@@ -14,20 +14,20 @@ module mainfsm (
     output logic [1:0] ALUOp
 );
 
-    // Durumları tanımlıyoruz (S0'dan S10'a kadar)
+   
     typedef enum logic [3:0] {
         FETCH, DECODE, MEMADR, MEMREAD, MEMWB, MEMWRITE, EXECUTER, ALUWB, EXECUTEI, JAL, BEQ
     } statetype;
 
     statetype state, nextstate;
 
-    // 1. Durum Hafızası (Senkron)
+   
     always_ff @(posedge clk or posedge reset) begin
         if (reset) state <= FETCH;
         else       state <= nextstate;
     end
 
-    // 2. Sonraki Durum Mantığı (Kombinasyonel)
+
     always_comb begin
         case (state)
             FETCH:    nextstate = DECODE;
@@ -39,7 +39,7 @@ module mainfsm (
                     7'b0010011: nextstate = EXECUTEI; // I-type ALU
                     7'b1101111: nextstate = JAL;      // jal
                     7'b1100011: nextstate = BEQ;      // beq
-                    default:    nextstate = FETCH;    // Tanımsız durumlar için güvenli başlangıç
+                    default:    nextstate = FETCH;    
                 endcase
             end
             MEMADR: begin
@@ -61,10 +61,8 @@ module mainfsm (
         endcase
     end
 
-    // 3. Çıkış Mantığı (Kombinasyonel)
     always_comb begin
-        // Kural: Latch oluşumunu engellemek ve "don't care" (farketmez) durumlarını 
-        // 0'a çekmek için başlangıçta tüm sinyallere varsayılan (0) değerleri atıyoruz.
+
         Branch    = 0;
         PCUpdate  = 0;
         RegWrite  = 0;
@@ -76,7 +74,6 @@ module mainfsm (
         AdrSrc    = 0;
         ALUOp     = 2'b00;
 
-        // Şimdi sadece şemada o durum için belirtilen sinyalleri güncelliyoruz
         case (state)
             FETCH: begin
                 AdrSrc    = 0;
