@@ -11,20 +11,20 @@ module aludec (
 
     always_comb begin
         case (ALUOp)
-            2'b00: ALUControl = 3'b000; // lw, sw komutları için adres hesaplama -> Toplama (add)
-            2'b01: ALUControl = 3'b001; // beq komutu için eşitlik kontrolü -> Çıkarma (subtract)
+            2'b00: ALUControl = 3'b000; // lw, sw 
+            2'b01: ALUControl = 3'b001; // beq 
             
             default: case (funct3)      
                 3'b000: begin
                     if (RtypeSub)
-                        ALUControl = 3'b001; // sub (çıkarma)
+                        ALUControl = 3'b001; // sub 
                     else
-                        ALUControl = 3'b000; // add, addi (toplama)
+                        ALUControl = 3'b000; // add, addi 
                 end
-                3'b010: ALUControl = 3'b101; // slt (set less than)
+                3'b010: ALUControl = 3'b101; // slt 
                 3'b110: ALUControl = 3'b011; // or
                 3'b111: ALUControl = 3'b010; // and
-                default: ALUControl = 3'b000; // Tanımsız durumlar
+                default: ALUControl = 3'b000;
             endcase
         endcase
     end
