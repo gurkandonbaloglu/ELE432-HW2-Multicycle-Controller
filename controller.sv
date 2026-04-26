@@ -14,12 +14,11 @@ module controller (
     output logic       regwrite, memwrite
 );
 
-    // Alt modüller arasında haberleşmeyi sağlayacak iç kablolar (Şekil 1'deki mavi oklar)
     logic [1:0] aluop;
     logic       branch;
     logic       pcupdate;
 
-    // 1. Ana Durum Makinesi (Şef) Bağlantısı
+
     mainfsm mainfsm_inst (
         .clk(clk),
         .reset(reset),
@@ -36,22 +35,20 @@ module controller (
         .ALUOp(aluop)
     );
 
-    // 2. ALU Çözücü Bağlantısı
     aludec aludec_inst (
-        .opb5(op[5]),            // op kodunun 5. biti
+        .opb5(op[5]),          
         .funct3(funct3),
         .funct7b5(funct7b5),
-        .ALUOp(aluop),           // mainfsm'den gelen kablo
+        .ALUOp(aluop),           
         .ALUControl(alucontrol)
     );
 
-    // 3. Komut Çözücü Bağlantısı
     instrdec instrdec_inst (
         .op(op),
         .ImmSrc(immsrc)
     );
 
-    // Şekil 1'deki en üstte bulunan Mantık Kapıları (PCWrite'ı oluşturan kısım)
+
     assign pcwrite = pcupdate | (branch & zero);
 
 endmodule
